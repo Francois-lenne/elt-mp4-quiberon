@@ -6,6 +6,8 @@ import time
 # Formater la date au format YYYY/MM/DD
 date_formatee = (datetime.datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
 
+date_name_formatee = (datetime.datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+
 
 # Enregistrer l'heure de début
 start_time = time.time()
@@ -30,7 +32,7 @@ for hour in range(8, 21):
     for minute in range(4, 64, 10):
         hour_str = str(hour).zfill(2)
         minute_str = str(minute).zfill(2)
-        download_video(f"https://data.skaping.com/quiberon/video-panoramique/{date_formatee}/{hour_str}-{minute_str}.mp4", f"downloaded_video_{hour_str}_{minute_str}.mp4")
+        download_video(f"https://data.skaping.com/quiberon/video-panoramique/{date_formatee}/{hour_str}-{minute_str}.mp4", f"downloaded_video_{date_name_formatee}_{hour_str}_{minute_str}.mp4")
 
 
 
