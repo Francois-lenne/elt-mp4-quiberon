@@ -28,7 +28,7 @@ def download_video(url, filename):
 
 
 # Générer les liens avec les heures et les minutes
-for hour in range(8, 21):
+for hour in range(10, 18):
     for minute in range(4, 64, 10):
         hour_str = str(hour).zfill(2)
         minute_str = str(minute).zfill(2)
