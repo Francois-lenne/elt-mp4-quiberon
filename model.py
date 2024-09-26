@@ -1,5 +1,10 @@
 import cv2
 import numpy as np
+import time
+
+
+# Start time
+start_time = time.time()
 
 # Charger les poids et la configuration de YOLO
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
@@ -80,3 +85,10 @@ while cap.isOpened():
 # Libérer les ressources
 cap.release()
 cv2.destroyAllWindows()
+
+# End time
+end_time = time.time()
+
+# Calculate and print the execution time
+execution_time = end_time - start_time
+print(f"Le temps d'exécution du programme est de {execution_time} secondes.")
