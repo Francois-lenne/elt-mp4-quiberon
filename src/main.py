@@ -27,8 +27,6 @@ def main(event, context):
 
     # Record start time
     start_time = time.time()
-
-    # Initialize GCS client
     
 
     # Specify your bucket name
