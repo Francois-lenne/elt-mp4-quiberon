@@ -4,3 +4,4 @@ video/
 *.weights
 *.cfg
 *.names
+.DS_Store
