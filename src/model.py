@@ -21,7 +21,7 @@ with open("coco.names", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 # Read the video
-cap = cv2.VideoCapture("downloaded_video_2024-09-29_10_04.mp4")
+cap = cv2.VideoCapture("/Users/francoislenne/data_pipeline_video/downloaded_video_08_04.mp4")
 
 print("Analyzing video...", int(cap.get(cv2.CAP_PROP_FRAME_COUNT)), "frames")
 

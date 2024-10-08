@@ -19,7 +19,7 @@ def download_and_upload_to_gcs(url, blob_name, bucket_name):
 
 
 
-def main(event, context):
+def main(request):
     date_formatee = (datetime.datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
     date_name_formatee = (datetime.datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 
@@ -51,4 +51,4 @@ def main(event, context):
 
 # For local testing
 if __name__ == "__main__":
-    main(None, None)
+    main()
