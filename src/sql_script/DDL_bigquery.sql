@@ -11,6 +11,7 @@ OPTIONS(
 CREATE TABLE video_quiberon.named_result_ml_bronze (
   frame INT64,
   person_present BOOLEAN,
+  video_path STRING,
   day STRING,
   hour STRING
 );
