@@ -2,9 +2,20 @@ from model import analyze_video_for_persons
 import pandas as pd
 from google.cloud import bigquery
 from google.auth import default
+from google.cloud import storage
+from google.auth import default
+
+
+
+
+
 
 # Path to your MP4 video
 video_path = "downloaded_video_2024-09-29_10_34.mp4"
+
+
+
+
 
 
 # Analyze the video
@@ -34,6 +45,33 @@ df_video = retrieve_person_frame(video_path)
 
 
 
+# Get the project ID
+credentials, project_id = default()
+
+
+# Define your bucket name
+bucket_name = "your-bucket-name"
+
+
+# Retrieve all file names and paths from the bucket
+def list_files_in_bucket(bucket_name):
+    client = storage.Client()
+    bucket = client.get_bucket(bucket_name)
+    blobs = bucket.list_blobs()
+
+    files = []
+    for blob in blobs:
+        files.append(blob.name)
+        print(blob.name)
+
+    return files
+
+
+# List all files in the bucket
+files = list_files_in_bucket(bucket_name)
+print(f"Total files: {len(files)}")
+
+
 # Load DataFrame into BigQuery
 def load_dataframe_to_bigquery(df, table_id):
     client = bigquery.Client()
@@ -43,8 +81,7 @@ def load_dataframe_to_bigquery(df, table_id):
 
 
 
-# Get the project ID
-credentials, project_id = default()
+
 
 # Define your BigQuery table ID
 table_id = f"{project_id}.video_quiberon.named_result_ml_bronze"
