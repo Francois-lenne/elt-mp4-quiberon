@@ -5,3 +5,5 @@ video/
 *.cfg
 *.names
 .DS_Store
+.__pycache__/
+*.pyc
