@@ -37,7 +37,7 @@ df_video = retrieve_person_frame(video_path)
 # Load DataFrame into BigQuery
 def load_dataframe_to_bigquery(df, table_id):
     client = bigquery.Client()
-    job = client.load_table_from_dataframe(df, table_id)
+    job = client.insert_rows_from_dataframe(df, table_id)
     job.result()  # Wait for the job to complete
     print(f"Loaded {job.output_rows} rows into {table_id}.")
 
