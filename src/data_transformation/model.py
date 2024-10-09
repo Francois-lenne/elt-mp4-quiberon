@@ -53,7 +53,7 @@ set_up_capture("downloaded_video_2024-09-29_10_34.mp4")
 def process_video(cap, net, output_layers, classes):
     # Initialize variables
     frame_count = 0
-    person_detected = False
+    detection_results = {}
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -105,24 +105,31 @@ def process_video(cap, net, output_layers, classes):
         # Check if a person is detected
         person_detected = len(indexes) > 0
 
-        # Display results
+        # Store results for this frame
+        detection_results[frame_count] = {"person_present": person_detected}
+
+        # Display results (optional, can be commented out for faster processing)
         print(f"Frame {frame_count}: Person detected = {person_detected}")
 
     # Release resources
     cap.release()
     cv2.destroyAllWindows()
 
-    return person_detected
+    return detection_results
 
 
 
-def main(video_path):
+def check_person(video_path):
+
     net, output_layers = set_up_output_layer()
     classes = set_up_classes()
     cap = set_up_capture(video_path)
-    person_detected = process_video(cap, net, output_layers, classes)
+    detection_results = process_video(cap, net, output_layers, classes)
 
-    return person_detected
+    print(detection_results)
 
 
-main("downloaded_video_2024-09-29_10_34.mp4")
+    return detection_results
+
+
+check_person("downloaded_video_2024-09-29_10_34.mp4")
