@@ -152,6 +152,13 @@ def main():
 
         load_dataframe_to_bigquery(df_video, table_id)
 
+
+
+        # remove the file treated
+
+        os.remove(f"downloaded_videos/{file}")
+        print(f"Removed  filed in local {file}.")
+
     return 'Process completed'
 
 
