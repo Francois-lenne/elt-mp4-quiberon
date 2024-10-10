@@ -28,7 +28,7 @@ def retrieve_person_frame(video_path):
 
     return df
 
-df_video = retrieve_person_frame(video_path)
+# df_video = retrieve_person_frame(video_path)
 
 # Get the project ID
 credentials, project_id = default()
@@ -68,9 +68,7 @@ def download_file_from_bucket(bucket_name, source_blob_name, destination_file_na
     blob.download_to_filename(destination_file_name)
     print(f"Downloaded {source_blob_name} to {destination_file_name}.")
 
-# List all files in the bucket
-files = list_files_in_bucket(bucket_name)
-print(f"Total files: {len(files)}")
+
 
 
 # Function to check if files have already been processed
@@ -117,5 +115,43 @@ print(f"Table ID: {table_id}")
 # Load DataFrame into BigQuery
 # load_dataframe_to_bigquery(df_video, table_id)
 
-# Print the DataFrame
-print(df_video.head())
+
+# Define the main function
+def main():
+
+    print('Starting the process')
+
+    # retrieve the file store in the bucket
+
+    bucket_name = "bucket_quiberon_video"
+
+    list_files_in_bucket(bucket_name)
+
+    # Check which files have not been processed
+
+    unprocessed_files = check_file_in_bq(project_id, "video_quiberon", "named_result_ml_bronze", bucket_name)
+
+    # Download the first unprocessed file
+
+    for file in unprocessed_files:
+
+        print('Downloading file:', file)
+
+        download_file_from_bucket(bucket_name, file, f"downloaded_videos/{file}")
+
+        # Analyze the video and retrieve the DataFrame
+
+        df_video = retrieve_person_frame(f"downloaded_videos/{file}")
+
+        # Load the DataFrame into BigQuery
+
+        load_dataframe_to_bigquery(df_video, table_id)
+
+    return 'Process completed'
+
+
+
+
+# Ensure the main function runs when the script is executed
+if __name__ == "__main__":
+    main()
