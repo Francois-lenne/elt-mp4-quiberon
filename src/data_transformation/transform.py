@@ -5,8 +5,7 @@ from google.cloud import bigquery
 from google.auth import default
 from google.cloud import storage
 
-# Path to your MP4 video
-video_path = "downloaded_video_2024-09-29_10_34.mp4"
+
 
 # Analyze the video
 def retrieve_person_frame(video_path):
@@ -20,21 +19,20 @@ def retrieve_person_frame(video_path):
 
     df['video_path'] = video_path
 
-    df['day'] = video_path.split("_")[-3]
+    path_parts = video_path.split('/')
 
-    df['hour'] = video_path.split("_")[-2] + "_" + video_path.split("_")[-1].split(".")[0]
+    df['day'] = path_parts[-2]
+
+    df['hour'] = path_parts[-1].split('.')[0]
 
     df['hour'] = df['hour'].str.replace('_', 'h')
 
     return df
 
-# df_video = retrieve_person_frame(video_path)
 
-# Get the project ID
-credentials, project_id = default()
 
-# Define your bucket name
-bucket_name = "bucket_quiberon_video"
+
+
 
 # Retrieve all file names and paths from the bucket
 def list_files_in_bucket(bucket_name):
@@ -107,19 +105,23 @@ def load_dataframe_to_bigquery(df, table_id):
     job.result()  # Wait for the job to complete
     print(f"Loaded {job.output_rows} rows into {table_id}.")
 
-# Define your BigQuery table ID
-table_id = f"{project_id}.video_quiberon.named_result_ml_bronze"
 
-print(f"Table ID: {table_id}")
-
-# Load DataFrame into BigQuery
-# load_dataframe_to_bigquery(df_video, table_id)
 
 
 # Define the main function
 def main():
 
     print('Starting the process')
+
+
+    # Get the project ID
+
+    credentials, project_id = default()
+
+
+    # Define the BigQuery table ID
+
+    table_id = f"{project_id}.video_quiberon.named_result_ml_bronze"
 
     # retrieve the file store in the bucket
 
@@ -142,6 +144,9 @@ def main():
         # Analyze the video and retrieve the DataFrame
 
         df_video = retrieve_person_frame(f"downloaded_videos/{file}")
+
+
+        print('df vide : ', df_video)
 
         # Load the DataFrame into BigQuery
 
