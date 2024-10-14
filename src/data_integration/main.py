@@ -49,6 +49,8 @@ def main(request):
     execution_time = end_time - start_time
     print(f"Function execution time: {execution_time} seconds.")
 
+    return "200"
+
 # For local testing
 if __name__ == "__main__":
     main()
