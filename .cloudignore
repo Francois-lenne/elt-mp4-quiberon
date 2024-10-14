@@ -1,0 +1,11 @@
+*.mp4
+video/
+.venv/
+*.weights
+*.cfg
+*.names
+.DS_Store
+.__pycache__/
+*.pyc
+config/
+sql_script/
