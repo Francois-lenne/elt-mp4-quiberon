@@ -1,0 +1,18 @@
+# Use the official Python image as a base
+FROM python:3.9-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy requirements.txt to the working directory
+COPY requirements.txt .
+
+# Install any necessary dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of your application code
+COPY . .
+
+# Command to run both Python programs when the container starts
+# You can also run one program at a time by changing the command
+CMD ["python", "transform.py"]  # Replace with "app2.py" for the second program
