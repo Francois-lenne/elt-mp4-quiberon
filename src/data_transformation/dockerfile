@@ -1,34 +1,31 @@
-# Use the official Python image as a base
 FROM python:3.9-slim
 
-
-# Install system dependencies for OpenCV and others
+# Install curl and other necessary dependencies
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
+    curl \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    wget  # Install wget or curl if your script needs them to download files
+    ffmpeg \
+    libopencv-dev
 
-# Set the working directory inside the container
+# Create the /app directory
+RUN mkdir -p /app
+
+# Download YOLOv3 files into /app directory
+RUN curl -o /app/yolov3.weights https://pjreddie.com/media/files/yolov3.weights
+RUN curl -o /app/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg
+RUN curl -o /app/coco.names https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
+
+# Copy the application code
+COPY . /app
 WORKDIR /app
 
-# Copy requirements.txt to the working directory
+
+# Install Python packages
 COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Install any necessary dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of your application code
-COPY . .
-
-
-# dowload the model configuration file 
-
-
-RUN chmod +x dowload_file_for_yolo.sh
-
-# Command to run both Python programs when the container starts
-# You can also run one program at a time by changing the command
-CMD ["python", "transform.py"]  # Replace with "app2.py" for the second program
+# Run the application
+CMD ["python", "transform.py"]
