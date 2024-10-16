@@ -75,7 +75,7 @@ def check_file_in_bq(project_id, dataset_id, table_id, bucket_name):
     
     # Query to get distinct video paths from BigQuery table
     query = f"""
-    SELECT DISTINCT video_path
+    SELECT DISTINCT REPLACE(video_path, 'downloaded_videos/', '') as video_path
     FROM `{project_id}.{dataset_id}.{table_id}`
     """
     
