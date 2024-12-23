@@ -1,27 +1,36 @@
-FROM python:3.9-slim
+FROM python:3.12-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8
+
+# Create a non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 # Install curl and other necessary dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
     ffmpeg \
-    libopencv-dev
+    libopencv-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create the /app directory
 RUN mkdir -p /app
 
-# Download YOLOv3 files into /app directory
-RUN curl -o /app/yolov3.weights https://pjreddie.com/media/files/yolov3.weights
-RUN curl -o /app/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg
-RUN curl -o /app/coco.names https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
+# Download YOLOv3 files
+RUN curl -L -o /app/yolov3.weights https://pjreddie.com/media/files/yolov3.weights && \
+    curl -L -o /app/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg && \
+    curl -L -o /app/coco.names https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
 
 # Copy the application code
 COPY . /app
 WORKDIR /app
-
 
 # Install Python packages
 COPY requirements.txt .
