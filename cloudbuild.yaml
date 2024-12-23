@@ -1,3 +1,13 @@
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['functions', 'deploy', 'retrieve_quiberon_video', '--runtime', 'python310', '--trigger-http', '--allow-unauthenticated', '--source', 'src/data_integration/.']
+  args: [
+    'functions', 'deploy', 'retrieve_quiberon_video',
+    '--runtime', 'python310',
+    '--trigger-http',
+    '--allow-unauthenticated',
+    '--source', 'src/data_integration/.',
+    '--entry-point', 'main',
+    '--timeout', '3600s',
+    '--memory', '256MB',
+    '--region', 'europe-west1'
+  ]
