@@ -1,13 +1,38 @@
 steps:
-- name: 'gcr.io/cloud-builders/gcloud'
-  args: [
-    'functions', 'deploy', 'retrieve_quiberon_video',
-    '--runtime', 'python310',
-    '--trigger-http',
-    '--allow-unauthenticated',
-    '--source', 'src/data_integration/.',
-    '--entry-point', 'main',
-    '--timeout', '3600s',
-    '--memory', '256MB',
-    '--region', 'europe-west1'
-  ]
+  # Étape 1 : Déploiement d'une Cloud Function
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'functions', 'deploy', 'retrieve_quiberon_video',
+      '--runtime', 'python310',
+      '--trigger-http',
+      '--allow-unauthenticated',
+      '--source', 'src/data_integration/.',
+      '--entry-point', 'main',
+      '--timeout', '3600s',
+      '--memory', '256MB',
+      '--region', 'europe-west1'
+    ]
+
+  # Étape 2 : Construction de l'image Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${_TAG}'
+      - '.'
+    id: 'build-image'
+
+# Variables substituables
+substitutions:
+  _REGION: 'europe-west1'  # Région de votre registry
+  _REPOSITORY_NAME: 'quiberon'  # Nom de votre repository dans Artifact Registry
+  _IMAGE_NAME: 'transformation'  # Nom de votre image
+  _TAG: 'v1'  # Tag de l'image
+  _SERVICE_NAME: ''  # Nom de votre service Cloud Run
+
+# Configuration des images à sauvegarder
+images:
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${_TAG}'
+
+# Timeout global du build (en secondes)
+timeout: '1200s'
