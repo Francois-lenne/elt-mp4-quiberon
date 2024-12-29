@@ -19,7 +19,7 @@ steps:
       - 'build'
       - '-t'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${_TAG}'
-      - '.'
+      - 'src/data_transformation'
     id: 'build-image'
 
 # Variables substituables
